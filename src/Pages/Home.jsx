@@ -9,7 +9,7 @@ import FooterData from "../Components/FooterData";
 import { useLocation } from "react-router-dom";
 import { useFilteredMovies } from "../Hooks/useFilteredMovies";
 import Card from "../Components/Card";
-import {Button} from "@heroui/react";
+import { Button } from "@heroui/react";
 
 export default function Home() {
   const location = useLocation();
@@ -23,19 +23,27 @@ export default function Home() {
   );
 
   if (isSearching) {
-    if (loading) return <p className="text-center mt-10"><Button isLoading variant="light">
-                Loading
-              </Button></p>;
-    if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+    if (loading)
+      return (
+        <p className="text-center mt-10">
+          <Button isLoading variant="light">
+            Loading
+          </Button>
+        </p>
+      );
+    if (error)
+      return <p className="text-center mt-10 text-red-500">{error}</p>;
     if (!searchMovies || searchMovies.length === 0)
       return <p className="text-center mt-10">No movies found.</p>;
 
     return (
       <>
-        <div className="p-4">
-          <h1 className="text-2xl font-bold mb-6">Search results</h1>
+        <div className="p-4 sm:p-6 md:p-8">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center">
+            Search results
+          </h1>
 
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
             {searchMovies.map((movie) => (
               <Card key={movie.id} movie={movie} />
             ))}
@@ -48,7 +56,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 p-4">
+      <div className="flex flex-col gap-8 sm:gap-10 p-4 sm:p-6 md:p-8">
         <NewRelease />
         <ScienceFiction />
         <Romantic />

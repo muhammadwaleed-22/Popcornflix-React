@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { BASE_URL } from "../api/config.api";
-import {Button} from "@heroui/react";
-
+import { Button } from "@heroui/react";
 
 export default function Detail() {
   const { id } = useParams();
@@ -13,11 +12,10 @@ export default function Detail() {
     async function fetchMovie() {
       try {
         const res = await fetch(
-          `${BASE_URL}/api/v2/movie_details.json?movie_id=${id}&with_images=true`,
+          `${BASE_URL}/api/v2/movie_details.json?movie_id=${id}&with_images=true`
         );
         if (!res.ok) throw new Error("Failed to fetch movie details");
         const data = await res.json();
-        console.log("movie detail response:", data);
         const m = data?.data?.movie;
 
         if (m) {
@@ -28,7 +26,7 @@ export default function Detail() {
           const allMovies = browseData?.data?.movies || [];
 
           const filtered = allMovies.filter((mv) => mv.id !== Number(id));
-          const selected = filtered.slice(0, 4); 
+          const selected = filtered.slice(0, 4);
           setSimilarMovies(selected);
         } else {
           setMovie(null);
@@ -44,22 +42,28 @@ export default function Detail() {
     fetchMovie();
   }, [id]);
 
-  if (!movie) return <p className="text-center mt-10 text-white"><Button isLoading variant="light">
-              Loading
-            </Button></p>;
+  if (!movie)
+    return (
+      <p className="text-center mt-10 text-white">
+        <Button isLoading variant="light">
+          Loading
+        </Button>
+      </p>
+    );
 
   return (
-    <div className="min-h-screen text-gray-300 p-8 font-sans">
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-64 shrink-0">
-          <div className="border-4 border-white rounded shadow-2xl overflow-hidden mb-4">
+    <div className="min-h-screen text-gray-300 p-4 sm:p-6 md:p-8 font-sans">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-6 md:gap-8">
+        {/* Movie Poster and Download */}
+        <div className="w-full md:w-64 shrink-0 flex flex-col items-center md:items-start">
+          <div className="border-4 border-white rounded shadow-2xl overflow-hidden mb-4 w-full md:w-auto">
             <img
               src={movie.large_cover_image}
               alt={`${movie.title} Poster`}
               className="w-full h-auto block"
             />
           </div>
-          <button className="w-full bg-black/85 hover:bg-black/100 text-white font-bold py-3 rounded flex items-center justify-center gap-2 transition-colors">
+          <button className="w-full md:full bg-black/85 hover:bg-black/100 text-white font-bold py-3 rounded flex items-center justify-center gap-2 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -76,16 +80,19 @@ export default function Detail() {
           </button>
         </div>
 
+        {/* Movie Info */}
         <div className="flex-1">
-          <h1 className="text-4xl font-bold text-black mb-4">{movie.title}</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4 text-center md:text-left">
+            {movie.title}
+          </h1>
 
-          <div className="mb-6 leading-relaxed">
+          <div className="mb-6 leading-relaxed flex flex-col sm:flex-row gap-2 sm:gap-6 justify-center md:justify-start">
             <p className="font-bold text-black">{movie.year}</p>
             <p className="font-bold text-black">{movie.genre}</p>
           </div>
 
           <div className="space-y-3 mb-8">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start">
               <span className="italic text-sm">Available in:</span>
               {movie.quality?.map((q, idx) => (
                 <button
@@ -97,16 +104,14 @@ export default function Detail() {
                   } bg-[#2f2f2f] border px-3 py-1 text-xs rounded hover:bg-gray-700`}
                 >
                   {q.label}{" "}
-                  {q.tag && (
-                    <span className="text-[#6ac045] ml-1">{q.tag}</span>
-                  )}
+                  {q.tag && <span className="text-[#6ac045] ml-1">{q.tag}</span>}
                 </button>
               ))}
             </div>
-            <p className="text-xs text-gray-500 italic">
+            <p className="text-xs text-gray-500 italic text-center md:text-left">
               WEB: same quality as BluRay
             </p>
-            <p className="text-xs text-gray-500 italic">
+            <p className="text-xs text-gray-500 italic text-center md:text-left">
               BluRay estimated release date:{" "}
               <span className="text-[#6ac045] font-semibold">
                 {movie.release_date}
@@ -114,78 +119,70 @@ export default function Detail() {
             </p>
           </div>
 
-          <button className="bg-[#2f2f2f] hover:bg-gray-700 border border-gray-600 px-4 py-1 rounded-sm text-sm flex items-center gap-2 mb-8">
+          <button className="bg-[#2f2f2f] hover:bg-gray-700 border border-gray-600 px-4 py-1 rounded-sm text-sm flex items-center gap-2 mb-8 w-full md:w-auto justify-center md:justify-start">
             <span className="text-white">⤓</span> Download Subtitles
           </button>
 
-          <div className="space-y-4 max-w-xs">
-            <div className="flex items-center gap-4">
+          <div className="space-y-4 max-w-xs mx-auto md:mx-0">
+            <div className="flex items-center gap-4 justify-center md:justify-start">
               <span className="text-green-500 text-xl">♥</span>
-              <span className="text-xl font-bold text-gray-500">
-                {movie.like_count}
-              </span>
+              <span className="text-xl font-bold text-gray-500">{movie.like_count}</span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 justify-center md:justify-start">
               <span className="text-red-500 text-xl">🍅</span>
               <div>
-                <span className="text-xl font-bold text-gray-500">
-                  {movie.tomato_rating}%
-                </span>
+                <span className="text-xl font-bold text-gray-500">{movie.tomato_rating}%</span>
                 <span className="text-xs uppercase ml-1 text-gray-500">
                   Tomatometer · {movie.tomato_reviews} reviews
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 justify-center md:justify-start">
               <span className="text-yellow-500 text-xl">🍿</span>
               <div>
-                <span className="text-xl font-bold text-gray-500">
-                  {movie.audience_score}%
-                </span>
+                <span className="text-xl font-bold text-gray-500">{movie.audience_score}%</span>
                 <span className="text-xs uppercase ml-1 text-gray-500">
                   Audience · {movie.audience_ratings} ratings
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="bg-yellow-500 text-black px-1 font-bold text-xs rounded-sm">
-                IMDb
-              </span>
+            <div className="flex items-center gap-4 justify-center md:justify-start">
+              <span className="bg-yellow-500 text-black px-1 font-bold text-xs rounded-sm">IMDb</span>
               <div className="flex items-center gap-1">
-                <span className="text-xl font-bold text-black">
-                  {movie.imdb_score}
-                </span>
+                <span className="text-xl font-bold text-black">{movie.imdb_score}</span>
                 <span className="text-gray-500 text-sm">/10</span>
                 <span className="text-black ml-2">★</span>
-                <span className="text-xs text-gray-500">
-                  {movie.imdb_votes}
-                </span>
+                <span className="text-xs text-gray-500">{movie.imdb_votes}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="w-full md:w-48">
-          <h3 className="text-black font-bold mb-4">Similar Movies</h3>
-          <div className="grid grid-cols-2 gap-2">
+        {/* Similar Movies */}
+        <div className="w-full md:w-48 mt-6 md:mt-0">
+          <h3 className="text-black font-bold mb-4 text-center md:text-left">Similar Movies</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
             {similarMovies.length ? (
               similarMovies.map((sim) => (
                 <Link key={sim.id} to={`/detail/${sim.id}`}>
                   <img
                     src={sim.medium_cover_image}
-                    className="border-2 border-white rounded hover:scale-105 transition-transform hover:border-black/60"
+                    className="border-2 border-white rounded hover:scale-105 transition-transform hover:border-black/60 w-full"
                     alt={sim.title}
                   />
                 </Link>
               ))
             ) : (
-              <p className="text-sm text-gray-500">No similar movies found.</p>
+              <p className="text-sm text-gray-500 text-center md:text-left">
+                No similar movies found.
+              </p>
             )}
           </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto mt-12 flex flex-wrap gap-2">
+      {/* Tags */}
+      <div className="max-w-5xl mx-auto mt-8 flex flex-wrap gap-2 justify-center md:justify-start">
         {movie.tags?.map((tag, idx) => (
           <span
             key={idx}

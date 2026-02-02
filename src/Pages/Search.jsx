@@ -25,38 +25,39 @@ export default function Search() {
   }, [query]);
 
   return (
-    <><div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6">
-        Search results for "{searchQuery}"
-      </h1>
+    <>
+      <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-center md:text-left">
+          Search results for "{searchQuery}"
+        </h1>
 
-      {loading && (
-        <div className="flex justify-center">
-          <Button isLoading variant="light">
-            Loading
-          </Button>
-        </div>
-      )}
+        {loading && (
+          <div className="flex justify-center my-6">
+            <Button isLoading variant="light">
+              Loading
+            </Button>
+          </div>
+        )}
 
-      {error && (
-        <p className="text-center text-red-500">{error}</p>
-      )}
+        {error && (
+          <p className="text-center text-red-500 my-6">{error}</p>
+        )}
 
-      {!loading && !error && results.length === 0 && (
-        <p className="text-center text-gray-400">
-          No movies found.
-        </p>
-      )}
+        {!loading && !error && results.length === 0 && (
+          <p className="text-center text-gray-400 my-6">
+            No movies found.
+          </p>
+        )}
 
-      {!loading && !error && results.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-          {results.map((movie) => (
-            <Card key={movie.id} movie={movie} />
-          ))}
-        </div>
-      )}
-    </div>
-    <FooterData />
+        {!loading && !error && results.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+            {results.map((movie) => (
+              <Card key={movie.id} movie={movie} />
+            ))}
+          </div>
+        )}
+      </div>
+      <FooterData />
     </>
   );
 }
