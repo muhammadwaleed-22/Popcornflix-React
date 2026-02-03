@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BASE_URL } from "../api/config.api";
 
-export const useFilteredMovies = (searchParams) => {
+export const useFilteredMovies = (searchParams = "") => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

@@ -1,19 +1,20 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate, useHref } from "react-router-dom"; // Add these
+import { HeroUIProvider } from "@heroui/react";
 import Navbar from "./Components/Navbar";
-import Home from "./Pages/Home";
 import Browse from "./Pages/Browse";
+import Home from "./Pages/Home";
 import Top from "./Pages/Top";
 import New from "./Pages/New";
 import Detail from "./Pages/Detail";
 import Search from "./Pages/Search";
 
-
 function App() {
-  return (
-    <Router>
-      <Navbar />
+  const navigate = useNavigate();
 
+  return (
+    <HeroUIProvider navigate={navigate} useHref={useHref}>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Browse />} />
         <Route path="/home" element={<Home />} />
@@ -22,10 +23,7 @@ function App() {
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/search" element={<Search />} />
       </Routes>
-
-      
-    </Router>
-  );
-}
+    </HeroUIProvider>
+  );}
 
 export default App;
