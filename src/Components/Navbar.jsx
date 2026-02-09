@@ -1,15 +1,33 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
   Input,
-  Button
+  Button,
 } from "@heroui/react";
-import { useNavbarSearch } from "../Hooks/useNavbarSearch";
-import Card from "./Card";
+import { useMovies } from "../Hooks/hook";
+
+const SmallCard = ({ movie }) => {
+  return (
+    <Link
+      to={`/detail/${movie.id}`}
+      className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer"
+    >
+      <img
+        src={movie.medium_cover_image}
+        alt={movie.title}
+        className="w-12 h-16 object-cover rounded"
+      />
+      <div className="flex flex-col leading-tight">
+        <span className="font-semibold text-sm">{movie.title}</span>
+        <span className="text-xs text-gray-500">{movie.year}</span>
+      </div>
+    </Link>
+  );
+};
 
 export const AcmeLogo = () => <></>;
 
@@ -54,19 +72,21 @@ const navLinkClass = ({ isActive }) =>
 
 export default function NavbarComponent() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { query, setQuery, results, loading, error } = useNavbarSearch();
-  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
 
-  const goToSearchPage = () => {
-    if (!query.trim()) return;
-    navigate(`/search?query=${encodeURIComponent(query)}`);
-    setMobileOpen(false); // Close drawer on search
-  };
+  const {
+    movies: results,
+    loading,
+    error,
+  } = useMovies({
+    limit: 4,
+    page: 1,
+    query_term: query,
+  });
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      goToSearchPage();
     }
   };
 
@@ -74,7 +94,6 @@ export default function NavbarComponent() {
     <>
       <Navbar isBordered className="relative">
         <NavbarContent justify="start" className="relative">
-          {/* Mobile toggle button on top-left */}
           <div className="sm:hidden absolute left-2 top-2 z-50">
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -108,12 +127,13 @@ export default function NavbarComponent() {
 
           <NavbarBrand className="ml-8 sm:ml-0 flex items-center gap-2">
             <AcmeLogo />
-            <p className="hidden sm:block font-bold text-2xl text-[#051f20]">
-              Popcornflix
-            </p>
+            <NavLink to="/" className={navLinkClass}>
+              <p className="hidden sm:block font-bold text-2xl text-[#051f20]">
+                Popcornflix
+              </p>
+            </NavLink>
           </NavbarBrand>
 
-          {/* Desktop links */}
           <NavbarContent className="hidden sm:flex gap-3">
             <NavbarItem>
               <NavLink to="/home" className={navLinkClass}>
@@ -121,7 +141,7 @@ export default function NavbarComponent() {
               </NavLink>
             </NavbarItem>
             <NavbarItem>
-              <NavLink to="/" end className={navLinkClass}>
+              <NavLink to="/" className={navLinkClass}>
                 Browse Movies
               </NavLink>
             </NavbarItem>
@@ -138,21 +158,19 @@ export default function NavbarComponent() {
           </NavbarContent>
         </NavbarContent>
 
-        {/* Mobile Drawer */}
         <div
           className={`fixed top-0 left-0 h-full w-64 bg-white/50 shadow-lg z-40 transform transition-transform duration-300 sm:hidden ${
             mobileOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="p-4 flex flex-col gap-4">
-            {/* Search inside drawer */}
             <Input
               classNames={{
                 base: "w-full h-10",
                 mainWrapper: "h-full",
                 input: "text-small",
                 inputWrapper:
-                  "h-full font-normal text-default-500 bg-default-400/20"
+                  "h-full font-normal text-default-500 bg-default-400/20",
               }}
               placeholder="Type to search..."
               size="sm"
@@ -161,16 +179,12 @@ export default function NavbarComponent() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               startContent={
-                <button
-                  onClick={goToSearchPage}
-                  className="cursor-pointer focus:outline-none"
-                >
+                <button className="cursor-pointer focus:outline-none">
                   <SearchIcon size={18} />
                 </button>
               }
             />
 
-            {/* Navigation links */}
             <NavLink
               to="/home"
               className={navLinkClass}
@@ -201,19 +215,25 @@ export default function NavbarComponent() {
               Top 100
             </NavLink>
 
-            {/* Sign buttons inside drawer */}
             <div className="flex gap-2 mt-2">
-              <Button color="primary" variant="flat" onClick={() => setMobileOpen(false)}>
+              <Button
+                color="primary"
+                variant="flat"
+                onClick={() => setMobileOpen(false)}
+              >
                 Sign Up
               </Button>
-              <Button color="primary" variant="flat" onClick={() => setMobileOpen(false)}>
+              <Button
+                color="primary"
+                variant="flat"
+                onClick={() => setMobileOpen(false)}
+              >
                 Sign In
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Desktop Search & Sign */}
         <NavbarContent justify="end" className="items-center gap-2 relative">
           <Input
             classNames={{
@@ -221,7 +241,7 @@ export default function NavbarComponent() {
               mainWrapper: "h-full",
               input: "text-small",
               inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20"
+                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
             }}
             placeholder="Type to search..."
             size="sm"
@@ -230,10 +250,7 @@ export default function NavbarComponent() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             startContent={
-              <button
-                onClick={goToSearchPage}
-                className="cursor-pointer focus:outline-none"
-              >
+              <button className="cursor-pointer focus:outline-none">
                 <SearchIcon size={18} />
               </button>
             }
@@ -246,23 +263,42 @@ export default function NavbarComponent() {
             <Button color="primary" variant="flat">
               Sign In
             </Button>
+            <NavLink
+              to="/liked"
+              className={navLinkClass}
+              onClick={() => setMobileOpen(false)}
+            >
+              💖
+            </NavLink>
           </div>
 
-          {/* Search Results Dropdown */}
-          {(results.length > 0 || loading || error) && (
-            <div className="absolute top-14 right-0 text-gray-300 shadow-lg rounded max-w-4xl w-full z-50 p-4 bg-white dark:bg-gray-800">
+          {query.trim() !== "" && (
+            <div className="absolute top-14 right-0 shadow-lg rounded max-w-md w-full z-50 p-2 bg-white dark:bg-gray-800">
               {loading && (
-                <p className="text-center">
-                  <Button isLoading color="secondary">Loading</Button>
+                <p className="text-center py-2">
+                  <Button isLoading color="light">
+                    Loading
+                  </Button>
                 </p>
               )}
-              {error && <p className="text-red-500 text-center">{error}</p>}
-              {!loading && !error && results.length === 0 && (
-                <p className="text-center text-gray-400">No movies found.</p>
+
+              {error && (
+                <p className="text-red-500 text-center py-2">{error}</p>
               )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
-                {results.map((movie) => (
-                  <Card key={movie.id} movie={movie} />
+
+              {!loading && !error && results.length === 0 && (
+                <p className="text-center text-gray-400 py-2">
+                  No movies found.
+                </p>
+              )}
+
+              <div className="flex flex-col gap-1">
+                {results.slice(0, 10).map((movie) => (
+                  <SmallCard
+                    key={movie.id}
+                    movie={movie}
+                    clearQuery={() => setQuery("")}
+                  />
                 ))}
               </div>
             </div>

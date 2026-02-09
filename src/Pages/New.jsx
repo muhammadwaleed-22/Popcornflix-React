@@ -1,12 +1,15 @@
-import React from 'react';
-import { useMovies } from '../Hooks/hook';
-import Card from '../Components/Card';
-import FooterData from '../Components/FooterData';
+import React from "react";
+import { useMovies } from "../Hooks/hook";
+import Card from "../Components/Card";
+import FooterData from "../Components/FooterData";
 import { Button } from "@heroui/react";
 
 const New = () => {
   const { movies, loading, error } = useMovies({
-    type: 'NEW_DATA',
+    sort_by: "date_added",
+    order_by: "desc",
+    limit: 100,
+    page: 1,
   });
 
   if (loading)
@@ -33,11 +36,12 @@ const New = () => {
         </h1>
 
         <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
-          {movies.map(movie => (
+          {movies.map((movie) => (
             <Card key={movie.id} movie={movie} />
           ))}
         </div>
       </div>
+
       <FooterData />
     </>
   );

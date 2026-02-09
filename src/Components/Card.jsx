@@ -1,9 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, Button } from "@heroui/react";
 import { Link } from "react-router-dom";
 
-export default function Card({ movie }) {
+export default function Card({ movie, onFavoriteChange }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(() => {
+    const favs = JSON.parse(localStorage.getItem("favorites")) || [];
+    setIsFav(favs.some((m) => m.id === movie.id));
+  }, [movie.id]);
+
+  const toggleFavorite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let favs = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (favs.some((m) => m.id === movie.id)) {
+      // remove
+      favs = favs.filter((m) => m.id !== movie.id);
+      setIsFav(false);
+    } else {
+      // add
+      favs.push(movie);
+      setIsFav(true);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favs));
+
+    // 🔥 tell parent (Liked page) to update instantly
+    if (onFavoriteChange) {
+      onFavoriteChange(favs);
+    }
+  };
 
   return (
     <div
@@ -27,15 +57,22 @@ export default function Card({ movie }) {
       />
 
       {isHovered && (
+        <button
+          onClick={toggleFavorite}
+          className="absolute top-2 right-2 z-30 text-xl"
+        >
+          {isFav ? "❤️" : "🤍"}
+        </button>
+      )}
+
+      {isHovered && (
         <div className="absolute inset-0 flex flex-col justify-center items-center bg-black/50 text-white p-3 gap-2 transition-opacity duration-300 z-20">
           <p className="text-[10px] sm:text-tiny font-semibold">
             {movie.rating ?? "N/A"}
           </p>
 
           <p className="text-[10px] sm:text-tiny text-center font-semibold line-clamp-2">
-            {movie.genres?.length
-              ? movie.genres.join(", ")
-              : "Genre: N/A"}
+            {movie.genres?.length ? movie.genres.join(", ") : "Genre: N/A"}
           </p>
 
           <Link to={`/detail/${movie.id}`}>

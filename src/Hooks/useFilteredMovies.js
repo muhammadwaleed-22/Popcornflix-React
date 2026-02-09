@@ -20,6 +20,7 @@ export const useFilteredMovies = (searchParams = "") => {
 
       try {
         const params = new URLSearchParams(searchParams).toString();
+        
         const res = await fetch(`${BASE_URL}/api/v2/list_movies.json?${params}`);
         if (!res.ok) throw new Error("Failed to fetch movies");
         const data = await res.json();
