@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Image, Button } from "@heroui/react";
-import { Link } from "react-router-dom";
+import { Image } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
 
 export default function Card({ movie, onFavoriteChange }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isFav, setIsFav] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const favs = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -14,25 +15,20 @@ export default function Card({ movie, onFavoriteChange }) {
   const toggleFavorite = (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     let favs = JSON.parse(localStorage.getItem("favorites")) || [];
-
     if (favs.some((m) => m.id === movie.id)) {
-      // remove
       favs = favs.filter((m) => m.id !== movie.id);
       setIsFav(false);
     } else {
-      // add
       favs.push(movie);
       setIsFav(true);
     }
-
     localStorage.setItem("favorites", JSON.stringify(favs));
+    if (onFavoriteChange) onFavoriteChange(favs);
+  };
 
-    // 🔥 tell parent (Liked page) to update instantly
-    if (onFavoriteChange) {
-      onFavoriteChange(favs);
-    }
+  const goToDetail = () => {
+    navigate(`/detail/${movie.id}`);
   };
 
   return (
@@ -47,6 +43,7 @@ export default function Card({ movie, onFavoriteChange }) {
       "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={goToDetail}
     >
       <Image
         alt={movie.title}
@@ -74,12 +71,6 @@ export default function Card({ movie, onFavoriteChange }) {
           <p className="text-[10px] sm:text-tiny text-center font-semibold line-clamp-2">
             {movie.genres?.length ? movie.genres.join(", ") : "Genre: N/A"}
           </p>
-
-          <Link to={`/detail/${movie.id}`}>
-            <Button size="sm" radius="lg" color="primary">
-              View Details
-            </Button>
-          </Link>
         </div>
       )}
 
