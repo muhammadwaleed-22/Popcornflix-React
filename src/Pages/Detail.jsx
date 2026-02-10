@@ -54,7 +54,6 @@ export default function Detail() {
   return (
     <div className="min-h-screen text-gray-300 p-4 sm:p-6 md:p-8 font-sans">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-6 md:gap-8">
-        {/* Movie Poster and Download */}
         <div className="w-full md:w-64 shrink-0 flex flex-col items-center md:items-start">
           <div className="border-4 border-white rounded shadow-2xl overflow-hidden mb-4 w-full md:w-auto">
             <img
@@ -80,7 +79,6 @@ export default function Detail() {
           </button>
         </div>
 
-        {/* Movie Info */}
         <div className="flex-1">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4 text-center md:text-left">
             {movie.title}
@@ -158,7 +156,7 @@ export default function Detail() {
           </div>
         </div>
 
-        {/* Similar Movies */}
+
         <div className="w-full md:w-48 mt-6 md:mt-0">
           <h3 className="text-black font-bold mb-4 text-center md:text-left">Similar Movies</h3>
           <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
@@ -181,7 +179,7 @@ export default function Detail() {
         </div>
       </div>
 
-      {/* Tags */}
+
       <div className="max-w-5xl mx-auto mt-8 flex flex-wrap gap-2 justify-center md:justify-start">
         {movie.tags?.map((tag, idx) => (
           <span

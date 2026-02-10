@@ -26,13 +26,12 @@ export default function Browse({
 
   const [displayMovies, setDisplayMovies] = useState([]);
 
-  // Update filters (both search and other filters)
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
     }));
-    setCurrentPage(1); // reset to first page
+    setCurrentPage(1);
   };
 
   const searchTerm = filters.search.trim() || undefined;
