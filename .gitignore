@@ -1,24 +1,34 @@
-# Logs
-logs
-*.log
+# dependencies
+node_modules/
+
+# production build
+dist/
+
+# local env files
+.env
+.env.local
+.env.*.local
+
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# OS files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
+# editor folders
+.vscode/
+.idea/
+
+# Vite cache
+.vite/
+
+# optional: lockfiles (usually keep ONE, don't ignore unless you want to)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+build/
