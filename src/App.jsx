@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, Button } from "@heroui/react";
 import Navbar from "./Components/Navbar";
 import Browse from "./Pages/Browse";
 
@@ -14,8 +14,9 @@ function App() {
   return (
     <HeroUIProvider>
       <Navbar />
-
-      <Suspense fallback={<div style={{ padding: 20 }}>Loading...</div>}>
+      <Suspense fallback={<div style={{ padding: 20 }}><Button isLoading variant="light">
+          Loading
+        </Button></div>}>
         <Routes>
           <Route path="/" element={<Browse />} />
           <Route path="/home" element={<Home />} />
